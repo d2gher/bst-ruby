@@ -1,1 +1,1 @@
-# bst-ruby
+# Binary Search Trees in Ruby
