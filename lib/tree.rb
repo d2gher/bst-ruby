@@ -7,7 +7,7 @@ class Tree
   attr_accessor :root, :data
 
   def initialize(arr)
-    @data = arr.sort.uniq
+    @data = arr.uniq.sort
     @root = build_tree(@data)
   end
 
@@ -126,20 +126,28 @@ class Tree
     [left_height, right_height].max + 1
   end
 
+  def depth(node = root, pointer = root)
+    return 0 if node == pointer
+
+    return 1 + depth(node, pointer.right) if node.data > pointer.data
+    return 1 + depth(node, pointer.left) if node.data < pointer.data
+  end
+
+  def balanced?(node = root, left_height = 0, right_height = 0)
+    left_height = height(node.left) if node.left
+    right_height = height(node.right) if node.right
+
+    (left_height - right_height).abs < 2
+  end
+
+  def rebalance(node = root)
+    inorder = inorder(node)
+    Tree.new(inorder)
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
 end
-
-arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324, 400]
-# arr2 = [1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 6345]
-trr = Tree.new(arr)
-trr.insert(2)
-
-trr.delete(8)
-trr.pretty_print
-
-p trr.height(trr.find(5))
-# p trr.inorder
